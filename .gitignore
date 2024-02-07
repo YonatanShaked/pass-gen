@@ -1,0 +1,3 @@
+*.o
+pass-gen
+.vscode/

@@ -1,10 +1,13 @@
 #include <ctype.h>
 #include <openssl/rand.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+
+#define VERSION "1.2"
 
 #define MIN_LEN 8
 #define MAX_LEN 64
@@ -27,12 +30,10 @@ size_t get_random_seed(void)
 	return seed;
 }
 
-char get_random_char(const char* charset) { return charset[rand() % strlen(charset)]; }
-
 char* get_random_password(size_t pass_len)
 {
-	const char* char_arr[] = {"!@#$%^&*", "0123456789", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"};
-	const size_t num_char_arr = sizeof(char_arr) / sizeof(char_arr[0]);
+	const char* charsets[] = {"!@#$%^&*", "0123456789", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"};
+	const size_t charsets_len = sizeof(charsets) / sizeof(charsets[0]);
 
 	char* pass = (char*)malloc((pass_len + 1) * sizeof(char));
 	if (pass == NULL)
@@ -41,10 +42,24 @@ char* get_random_password(size_t pass_len)
 		exit(1);
 	}
 
-	for (size_t i = 0u; i < pass_len; i++)
+	bool has_symbol = false;
+	bool has_digit = false;
+
+	while(!has_digit || !has_symbol)
 	{
-		size_t char_type = rand() % num_char_arr;
-		pass[i] = get_random_char(char_arr[char_type]);
+		for (size_t i = 0u; i < pass_len; i++)
+		{
+			size_t charset_index = rand() % charsets_len;
+
+			if (charset_index == 0)
+				has_symbol = true;
+
+			if (charset_index == 1)
+				has_digit = true;
+
+			const char* charset = charsets[charset_index];
+			pass[i] = charset[rand() % strlen(charset)];
+		}
 	}
 
 	pass[pass_len] = '\0';
@@ -74,6 +89,7 @@ void print_usage(const char* exec)
 	printf("Options:\n");
 	printf(" -l, --length \t Set the length of the password (between %d and %d).\n", MIN_LEN, MAX_LEN);
 	printf(" -h, --help \t Display this help message.\n");
+	printf(" -v, --version \t Display version information.\n");
 }
 
 size_t parse_args(int argc, char** argv)
@@ -90,6 +106,11 @@ size_t parse_args(int argc, char** argv)
 			if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)
 			{
 				print_usage(argv[0]);
+				exit(0);
+			}
+			else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0)
+			{
+				printf("%s\n", VERSION);
 				exit(0);
 			}
 			else
@@ -138,7 +159,7 @@ int main(int argc, char** argv)
 	char* pass = get_random_password(pass_len);
 	if (pass != NULL)
 	{
-		printf("Generated password length: %zu charecters\n", pass_len);
+		printf("Generated password length: %zu characters\n", pass_len);
 		pretty_print(pass);
 		free(pass);
 	}

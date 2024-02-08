@@ -35,3 +35,5 @@ uninstall:
 	rm -f $(INSTALL_DIR)/$(EXEC)
 	rm -f $(MAN_DIR)/$(MANPAGE)
 	@echo "----UNINSTALL_DONE----"
+
+.PHONY: all release debug clean install uninstall

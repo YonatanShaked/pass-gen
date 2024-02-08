@@ -1,4 +1,4 @@
-.TH PASS-GEN 1 "February 2024" "pass-gen 1.0" "User Commands"
+.TH PASS-GEN 1 "February 2024" "pass-gen 1.2" "User Commands"
 
 .SH NAME
 pass-gen \- generate secure random passwords
@@ -18,6 +18,10 @@ Set the length of the generated password to \fIlength\fR. The password length mu
 .TP
 \fB-h\fR, \fB--help\fR
 Display a help message and exit.
+
+.TP
+\fB-v\fR, \fB--version\fR
+Display version information and exit.
 
 .SH EXIT STATUS
 The pass-gen program returns a zero exit status upon successful execution, and a non-zero exit status on failure.
@@ -40,6 +44,13 @@ Show program usage:
 $ \fBpass-gen\fR \fB-h\fR
 OR
 $ \fBpass-gen\fR \fB--help\fR
+.fi
+
+Show program version:
+.nf
+$ \fBpass-gen\fR \fB-v\fR
+OR
+$ \fBpass-gen\fR \fB--version\fR
 .fi
 
 .SH AUTHORS

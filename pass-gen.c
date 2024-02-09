@@ -7,7 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define VERSION "1.2"
+#define VERSION "1.3"
 
 #define MIN_LEN 8
 #define MAX_LEN 64
@@ -45,7 +45,7 @@ char* get_random_password(size_t pass_len)
 	bool has_symbol = false;
 	bool has_digit = false;
 
-	while(!has_digit || !has_symbol)
+	while (!has_digit || !has_symbol)
 	{
 		for (size_t i = 0u; i < pass_len; i++)
 		{
@@ -159,7 +159,6 @@ int main(int argc, char** argv)
 	char* pass = get_random_password(pass_len);
 	if (pass != NULL)
 	{
-		printf("Generated password length: %zu characters\n", pass_len);
 		pretty_print(pass);
 		free(pass);
 	}
